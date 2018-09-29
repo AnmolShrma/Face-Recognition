@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        body{
+            margin: 0;
+            padding: 0;
+        }
+        .container{
+            width:75%;
+            height:100vh;
+            margin: auto;
+            padding:0;
+            background-color: #a8e2e4;
+            display: flex;
+            flex-direction: column;
+        }
+        .containerHeading{
+            flex: 0;
+            color: white;
+            font-size: 20px;
+            font-variant-caps: small-caps;
+        }
+        .imageUpload{
+            flex: 2;
+            background: lavenderblush;
+        }
+        img{
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 5px;
+            display: block;
+            margin: 30px;
+            margin-left: auto;
+            margin-right: auto;
+            width: 50vw;
+        }
+        img:hover {
+            box-shadow: 0 0 2px 1px rgba(0, 140, 186, 0.5);
+        }
+        .inputLink{
+            background: white;
+            flex: 0;
+        }
+        .input{
+            position: relative;
+            /* font-size: 1.5em; */
+            background: linear-gradient(21deg, #10abff, #1beabd);
+            padding: 2px;
+            display: inline-block;
+            border-radius: 9999em;
+        }
+        .input *:not(span) {
+            position: relative;
+            display: inherit;
+            border-radius: inherit;
+            margin: 0;
+            border: none;
+            outline: none;
+            padding: 3px .325em;
+            z-index: 1;
+            }
+            .input *:not(span):focus + span {
+            opacity: 1;
+            -webkit-transform: scale(1);
+                    transform: scale(1);
+            }
+            .input span {
+            -webkit-transform: scale(0.993, 0.94);
+                    transform: scale(0.993, 0.94);
+            transition: opacity .25s, -webkit-transform .5s;
+            transition: transform .5s, opacity .25s;
+            transition: transform .5s, opacity .25s, -webkit-transform .5s;
+            opacity: 0;
+            position: absolute;
+            z-index: 0;
+            margin: 4px;
+            left: 0;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: inherit;
+            pointer-events: none;
+            box-shadow: inset 0 0 0 3px #fff, 0 0 0 4px #fff, 3px -3px 30px #1beabd,  -3px 3px 30px #10abff;
+            }
+
+            html {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+            line-height: 1.5;
+            font-size: 1em;
+            }
+
+            body {
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            }
+
+            html, body {
+            height: 100%;
+            }
+
+            input {
+            font-family: inherit;
+            line-height: inherit;
+            color: #2e3750;
+            min-width: 30em;
+            }
+
+            ::-webkit-input-placeholder {
+            color: #cbd0d5;
+            }
+
+            :-ms-input-placeholder {
+            color: #cbd0d5;
+            }
+
+            ::-ms-input-placeholder {
+            color: #cbd0d5;
+            }
+
+            ::placeholder {
+            color: #cbd0d5;
+            text-align: center;
+            font-weight: bold;
+            }
+
+            html::after {
+            content: '';
+            background: linear-gradient(21deg, #10abff, #1beabd);
+            height: 3px;
+            width: 100%;
+            position: absolute;
+            left: 0;
+            top: 0;
+            }
+
+        .uploadButton{
+            flex: 1;
+            background: bisque;
+        }
+        button {
+            display: inline-block;
+            width: 10em;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            outline: none;
+            color: #fff;
+            border: none;
+            border-radius: 15px;
+            margin: 25px;
+            padding: 5px;
+            background-color: #3bb940;
+            color: white;
+            -webkit-transition-duration: 0.4s;
+            transition-duration: 0.4s;
+        }
+
+        button:hover {
+            opacity: 0.7;
+            box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+        }
+    </style>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <!-- import jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="containerHeading">
+            <h1>Face Recognition With Kairos</h1>
+        </div>
+        <div class="imageUpload"><img id="checkImage" src="http://www.indianfoodexpress.in/wp-content/uploads/2018/07/X-T100-002-1080x768.jpg"
+                alt="image-2"></div>
+        <div class="inputLink">
+            <p>
+                <span class="input">
+                    <input id="imageUrl" type="text" placeholder="Enter the url..">
+                    <span></span>
+                </span>
+            </p>
+        </div>
+        <div class="uploadButton"><button type="button" onClick=findImage()>UPLOAD PIC</button></div>
+        <div class="showResult"></div>
+    </div>
+
+
+    <script type="text/javascript">
+        // put your keys in the header
+        const headers = {
+            "Content-type": "application/json",
+            "app_id": "YOUR_APP_ID",
+            "app_key": "YOUR_APP_KEY"
+        };
+
+        var url = "http://api.kairos.com/recognize";
+
+
+        function findImage() {
+            // console.log("function findImage");
+            const imageurl = document.getElementById('imageUrl').value;
+            var image = document.getElementById('checkImage');
+            image.src = imageurl;
+            console.log(imageurl);
+            var payload = {
+                "image": `${imageurl}`,
+                "gallery_name": "Testing-gallery"
+            };
+            // make request 
+            $.ajax(url, {
+                headers: headers,
+                type: "POST",
+                data: JSON.stringify(payload),
+                dataType: "text"
+            }).done(function (response) {
+                const data = JSON.parse(response);
+                console.log(data.images);
+                console.log(data.images[0].transaction.confidence * 100)
+                if (data.images[0].transaction.confidence * 100 > 60) {
+                    window.alert("Image Matched");
+                } else {
+                    window.alert("Image Not Matched");
+                }
+            });
+            $('#imageUrl').val("");
+        }
+    </script>
+</body>
+
+</html>
